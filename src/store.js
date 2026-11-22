@@ -5,6 +5,8 @@ export const products = [
   { id: 'monitor', name: 'Monitor', category: 'Displays', price: 120, label: 'Make room for more', description: 'A crisp, spacious display that brings your workspace together.', color: 'blue', badge: 'Workspace pick' },
 ].map((product, index) => ({ ...product, product_id: index + 1, stock_quantity: 99 }));
 export const defaultCategories = [...new Set(products.map(product => product.category))].map((category_name, index) => ({ category_id: index + 1, category_name }));
+// The exercise price list stays visible while the database connection loads.
+export const catalogProducts = products.map(product => ({ ...product, id: String(product.product_id), art: product.id }));
 export const shippingMethods = [{ id: 'standard', name: 'Standard delivery', detail: '3–5 business days', price: 0 }, { id: 'express', name: 'Express delivery', detail: '1–2 business days', price: 10 }];
 export const money = value => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 export function setQuantity(cart, id, value, catalog = products) {

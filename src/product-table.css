@@ -1,0 +1,178 @@
+.catalog-section {
+  padding: 28px 0 70px;
+  min-height: 58vh;
+}
+
+.exercise-product-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  color: #111;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+}
+
+.exercise-product-table .product-column {
+  width: 62%;
+}
+
+.exercise-product-table th,
+.exercise-product-table td {
+  border: 1px solid #111;
+  padding: 10px;
+  height: 57px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.exercise-product-table thead th {
+  font-weight: 700;
+}
+
+.exercise-product-table tbody th {
+  font-weight: 400;
+}
+
+.exercise-product-table tbody tr {
+  transition: background 160ms ease;
+}
+
+.exercise-product-table tbody tr:hover {
+  background: #f6f9f4;
+}
+
+.table-price-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.table-add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 10px;
+  background: white;
+  color: var(--green);
+  border: 1px solid #c7d6c5;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.table-add-button:hover {
+  background: #eaf2e5;
+}
+
+.table-add-button:active {
+  transform: scale(.96);
+}
+
+.table-add-button small {
+  font-size: 12px;
+}
+
+.exercise-product-table .empty-table {
+  font-size: 16px;
+  color: #71816a;
+  text-align: center;
+}
+
+.catalog-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 14px 16px;
+  border: 1px solid #dce4d7;
+  border-radius: 5px;
+  background: #f6f8f3;
+  color: #617358;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.catalog-notice button {
+  background: none;
+  color: var(--green);
+  padding: 4px;
+  text-decoration: underline;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.site-header {
+  border-top: 4px solid #153e36;
+}
+
+@media (max-width: 760px) {
+  .header-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    height: auto;
+    min-height: 120px;
+    padding-top: 16px;
+    row-gap: 12px;
+  }
+
+  .main-navigation {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    height: 52px;
+    gap: 12px;
+    justify-content: space-between;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .main-navigation a:not(:first-child) {
+    display: flex;
+  }
+
+  .main-navigation a {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .header-actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .catalog-section {
+    padding-top: 22px;
+  }
+
+  .exercise-product-table {
+    font-size: 18px;
+  }
+
+  .exercise-product-table .product-column {
+    width: 46%;
+  }
+
+  .table-price-cell {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .table-add-button {
+    font-size: 12px;
+    padding: 7px;
+  }
+
+  .catalog-notice {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exercise-product-table tbody tr,
+  .table-add-button {
+    transition: none;
+  }
+}
