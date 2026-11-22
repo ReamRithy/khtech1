@@ -1,8 +1,4 @@
 node_modules/
 dist/
-.tools/
-tmp/
-.sites-runtime/
-*.tar.gz
-*.tgz
-data/
+.codex-tmp/
+*.local
