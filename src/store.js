@@ -26,12 +26,22 @@ export function totals(cart, shipping = 'standard', catalog = products) {
 }
 export function validateCustomer(customer) {
   const errors = {};
-  for (const [field, label] of Object.entries({ customer_name: 'Customer name', email: 'Email', phone: 'Phone number', address: 'Address' })) {
+  for (const [field, label] of Object.entries({ firstName: 'First name', lastName: 'Last name', email: 'Email', phone: 'Phone number', address: 'Address' })) {
     if (!customer[field]?.trim()) errors[field] = `${label} is required.`;
   }
   if (customer.email?.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email.trim())) errors.email = 'Enter a valid email address.';
   if (customer.phone?.trim() && !/^[+()\d\s.-]{7,25}$/.test(customer.phone.trim())) errors.phone = 'Enter a valid phone number.';
   return errors;
+}
+export function customerDetails(form) {
+  return {
+    customer_name: `${form.firstName.trim()} ${form.lastName.trim()}`,
+    email: form.email.trim(), phone: form.phone.trim(), address: form.address.trim(),
+  };
+}
+export function customerForm(profile) {
+  const [firstName = '', ...lastName] = (profile.customer_name || '').trim().split(/\s+/);
+  return { firstName, lastName: lastName.join(' '), email: profile.email || '', phone: profile.phone || '', address: profile.address || '' };
 }
 export function readSaved(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
 export function save(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch { return false; } }

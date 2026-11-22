@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { products, setQuantity, totals, cartItems, validateCustomer } from '../src/store.js';
+import { products, setQuantity, totals, cartItems, validateCustomer, customerDetails, customerForm } from '../src/store.js';
 
 test('exercise products and prices match the brief', () => {
   assert.deepEqual(products.map(({name,price})=>[name,price]), [['Laptop',650],['Mouse',15],['Keyboard',25],['Monitor',120]]);
@@ -23,12 +23,20 @@ test('shipping is included once and empty carts never incur delivery', () => {
   assert.equal(totals({},'express').total,0);
 });
 test('checkout rejects missing or invalid customer details', () => {
-  assert.equal(Object.keys(validateCustomer({})).length,4);
-  const valid={customer_name:'Sok Dara',email:'dara@example.com',phone:'+855 12 345 678',address:'Phnom Penh'};
+  assert.equal(Object.keys(validateCustomer({})).length,5);
+  const valid={firstName:'Sok',lastName:'Dara',email:'dara@example.com',phone:'+855 12 345 678',address:'Phnom Penh'};
   assert.deepEqual(validateCustomer(valid),{});
   assert.ok(validateCustomer({...valid,email:'invalid'}).email);
   assert.ok(validateCustomer({...valid,phone:'abc'}).phone);
-  assert.ok(validateCustomer({...valid,customer_name:'  '}).customer_name);
+  assert.ok(validateCustomer({...valid,firstName:'  '}).firstName);
+  assert.ok(validateCustomer({...valid,lastName:'  '}).lastName);
+});
+
+test('PDF first and last names map to the ERD customer_name field', () => {
+  const form={firstName:' Sok ',lastName:' Dara ',email:' dara@example.com ',phone:' 012345678 ',address:' Phnom Penh '};
+  const details=customerDetails(form);
+  assert.deepEqual(details,{customer_name:'Sok Dara',email:'dara@example.com',phone:'012345678',address:'Phnom Penh'});
+  assert.deepEqual(customerForm(details),{firstName:'Sok',lastName:'Dara',email:'dara@example.com',phone:'012345678',address:'Phnom Penh'});
 });
 
 test('cart obeys database stock limits, including sold-out products', () => {

@@ -5,6 +5,7 @@ import { openStore } from '../server/database.js';
 import { createApp } from '../server/app.js';
 import { createServer as createViteServer } from 'vite';
 import viteConfig from '../vite.config.js';
+import { customerDetails } from '../src/store.js';
 
 test('HTTP flow authenticates, saves orders, isolates customers, and prevents overselling', async t => {
   const store=openStore(':memory:');
@@ -12,7 +13,7 @@ test('HTTP flow authenticates, saves orders, isolates customers, and prevents ov
   server.listen(0,'127.0.0.1'); await once(server,'listening');
   t.after(async()=>{server.closeAllConnections(); await new Promise(resolve=>server.close(resolve)); store.close();});
   const base=`http://127.0.0.1:${server.address().port}`;
-  const vite=await createViteServer({configFile:false,server:{...viteConfig.server,host:'127.0.0.1',port:0,watch:null,proxy:{'/api':{...viteConfig.server.proxy['/api'],target:base}}}});
+  const vite=await createViteServer({configFile:false,optimizeDeps:{noDiscovery:true,include:[]},server:{...viteConfig.server,host:'127.0.0.1',port:0,watch:null,proxy:{'/api':{...viteConfig.server.proxy['/api'],target:base}}}});
   await vite.listen();
   t.after(()=>vite.close());
   const proxyBase=`http://127.0.0.1:${vite.httpServer.address().port}`;
@@ -56,7 +57,7 @@ test('guest checkout needs no login and isolates orders even for the same email'
   server.listen(0,'127.0.0.1'); await once(server,'listening');
   t.after(async()=>{server.closeAllConnections(); await new Promise(resolve=>server.close(resolve)); store.close();});
   const base=`http://127.0.0.1:${server.address().port}`;
-  const customer={customer_name:'Guest',email:'guest@example.com',phone:'012345678',address:'Test address'};
+  const customer=customerDetails({firstName:'Guest',lastName:'Customer',email:'guest@example.com',phone:'012345678',address:'Test address'});
   const input={customer,shipping:'standard',items:[{product_id:2,quantity:1}]};
   async function checkout(body,cookie) {
     const response=await fetch(base+'/api/checkout',{method:'POST',headers:{'Content-Type':'application/json',...(cookie?{Cookie:cookie}:{})},body:JSON.stringify(body)});
@@ -68,6 +69,7 @@ test('guest checkout needs no login and isolates orders even for the same email'
   const first=await checkout(input);
   assert.equal(first.status,201);
   assert.equal(first.data.customer.password,undefined);
+  assert.equal(first.data.customer.customer_name,'Guest Customer');
   assert.equal(first.data.total_amount,15);
   const second=await checkout(input,first.cookie);
   assert.equal(second.data.customer_id,first.data.customer_id);

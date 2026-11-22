@@ -2,6 +2,8 @@
 
 This schema follows the supplied ERD, including the five table names, column names, primary keys, and foreign keys.
 
+The checkout form follows the practical exercise's separate First name and Last name fields. Their trimmed values are joined into `Customers.customer_name` when submitting the order, preserving the ERD's single name column.
+
 ```mermaid
 erDiagram
     Categories ||--o{ Products : contains
