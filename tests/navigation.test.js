@@ -33,3 +33,16 @@ test('navigation has no selected shop category on the cart page', () => {
   const html = renderToStaticMarkup(React.createElement(MainNavigation, { page: 'cart', category: 'All products', onSelect() {} }));
   assert.doesNotMatch(html, /aria-current="page"/);
 });
+
+test('all menu links remain visible when backend categories have not loaded', () => {
+  const html = renderToStaticMarkup(React.createElement(MainNavigation, { page: 'shop', category: 'Computers', categories: [], onSelect() {} }));
+  for (const label of ['Shop', 'Computers', 'Accessories', 'Displays']) assert.match(html, new RegExp(`>${label}</span>`));
+  assert.equal((html.match(/href="#shop"/g) || []).length, 4);
+  assert.match(html, /aria-current="page"[^>]*><span[^>]*>Computers<\/span>/);
+});
+
+test('menu uses database categories when available', () => {
+  const html = renderToStaticMarkup(React.createElement(MainNavigation, { page: 'shop', category: 'Audio', categories: [{ category_name: 'Audio' }], onSelect() {} }));
+  assert.match(html, /aria-current="page"[^>]*><span[^>]*>Audio<\/span>/);
+  assert.equal((html.match(/href="#shop"/g) || []).length, 2);
+});

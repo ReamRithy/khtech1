@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ShoppingBag, Plus, Minus, X, Check, Truck, ShieldCheck, Package, Headphones, ChevronRight, Search, Grid2X2, LayoutList, Laptop, Mouse, Keyboard, Monitor, CheckCircle2, CreditCard, Leaf } from 'lucide-react';
-import { shippingMethods, money, setQuantity, cartItems, totals, validateCustomer, readSaved, save } from './store';
+import { defaultCategories, shippingMethods, money, setQuantity, cartItems, totals, validateCustomer, readSaved, save } from './store';
 import { api, productView, orderView } from './api';
 import { AccountPage } from './Account';
 import './styles.css';
@@ -18,7 +18,7 @@ const icons = { Computers: Laptop, Accessories: Keyboard, Displays: Monitor };
 export default function App() {
   const [page, setPage] = useState(() => ['shop','cart','checkout','confirmation','account'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'shop');
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(defaultCategories);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [cart, setCart] = useState(() => { const stored = readSaved('kh-cart', {}); return stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {}; });
@@ -44,7 +44,7 @@ export default function App() {
     try {
       const [productRows, categoryRows] = await Promise.all([api('/products'), api('/categories')]);
       const catalog = productRows.map(productView);
-      setProducts(catalog); setCategories(categoryRows);
+      setProducts(catalog); setCategories(categoryRows.length ? categoryRows : defaultCategories);
       setCart(previous => catalog.reduce((next, p) => setQuantity(next, p.id, previous[p.id] ?? previous[p.art], catalog), {}));
     } catch (error) { setLoadError(error.message); }
     finally { setLoading(false); }

@@ -42,7 +42,7 @@ export default function MainNavigation({ page, category, onSelect, categories })
 
   return (
     <nav ref={navRef} className="main-navigation" aria-label="Main navigation">
-      {(categories ? [{ label: 'Shop', category: 'All products' }, ...categories.map(item => ({ label: item.category_name, category: item.category_name }))] : links).map(link => (
+      {(categories?.length ? [{ label: 'Shop', category: 'All products' }, ...categories.map(item => ({ label: item.category_name, category: item.category_name }))] : links).map(link => (
         <a
           key={link.category}
           className={selectedCategory === link.category ? 'selected' : ''}
