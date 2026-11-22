@@ -53,6 +53,16 @@ The server uses prepared SQL statements, same-origin checks, and a request-size 
 
 ## Verify and production build
 
+### GitHub Pages frontend
+
+The repository's `.github/workflows/deploy.yml` builds the React source and deploys only `dist/` to GitHub Pages. In GitHub, open **Settings > Pages > Build and deployment > Source** and select **GitHub Actions**, then push the workflow and source changes to `main`. Check the **Actions** tab until deployment succeeds.
+
+The dedicated `npm run build:pages` command uses `/khtech/` as the asset base for https://reamrithy.github.io/khtech/. The usual `npm run build` retains the root path for Netlify or the local Node server. Do not publish the root source `index.html` directly: it references JSX that must be compiled by Vite.
+
+GitHub Pages hosts the frontend only. The API and SQLite database need separate backend hosting before products and checkout can work online. The Vite development proxy does not run on GitHub Pages.
+
+### Local production server
+
 ```powershell
 npm.cmd test
 npm.cmd run build
